@@ -1,0 +1,8 @@
+seafile:
+  username: admin@ffgf.at
+  password:
+  server: https://file.ffgf.at
+ldap:
+  server:
+  base: dc=ffgf,dc=at
+  people: ou=people,dc=ffgf,dc=at
