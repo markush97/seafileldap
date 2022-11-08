@@ -9,6 +9,7 @@ class Seafile:
         self.username = settings["username"]
         self.password = settings["password"]
         self.server = settings["server"]
+        self.admin_email = settings["admin"]
         return
 
     def refreshAccessToken(self):

@@ -2,6 +2,7 @@ seafile:
   username: admin@ffgf.at
   password:
   server: https://file.ffgf.at
+  admin: test@test.at
 ldap:
   server:
   base: dc=ffgf,dc=at

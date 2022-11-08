@@ -13,7 +13,8 @@ config_schema = Schema({
     "seafile": {
         "username": str,
         "password": str,
-        "server": str
+        "server": str,
+        "admin": str
     },
     "ldap": {
         "server": str,
