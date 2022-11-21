@@ -8,6 +8,16 @@ from ldapClient import LdapClient
 
 import requests
 
+
+def checkIfMemberOf(memberOf: str, groupName: str, account, group_members, group_member_emails, seafile_member_emails, group_member_emails_new, logger) -> bool:
+  if groupName in memberOf:
+    group_members.append(account)
+    group_member_emails.append(account["mail"])
+
+    if account["mail"] not in seafile_member_emails:
+      logger.debug(" ---> Adding account " + account["cn"])
+      group_member_emails_new.append(account["mail"])
+
 def main(config="/etc/seafile/ldapsync.yml", v=False, vv=False):
 # Setup Logger
   logger = CustomLogger('[Seafile - LDAPSync]')
@@ -54,13 +64,14 @@ def main(config="/etc/seafile/ldapsync.yml", v=False, vv=False):
     for account_key in ldap_accounts:
         account = ldap_accounts[account_key]
 
-        if "memberOf" in account and group["name"] in account["memberOf"]:
-            group_members.append(account)
-            group_member_emails.append(account["mail"])
-
-            if account["mail"] not in seafile_member_emails:
-              logger.debug(" ---> Adding account " + account["cn"])
-              group_member_emails_new.append(account["mail"])
+        if "memberOf" in account:
+            if (isinstance(account["memberOf"], str)):
+              checkIfMemberOf(account["memberOf"], group["name"], account, group_members, group_member_emails, seafile_member_emails, group_member_emails_new, logger)
+            
+            else:
+              for memberOf in account["memberOf"]:
+                if checkIfMemberOf(memberOf, group["name"], account, group_members, group_member_emails, seafile_member_emails, group_member_emails_new, logger):
+                              continue
 
     for member in seafile_member_emails:
       if member != admin_email and member not in group_member_emails:
