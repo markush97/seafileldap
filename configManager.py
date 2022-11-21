@@ -14,7 +14,8 @@ config_schema = Schema({
         "username": str,
         "password": str,
         "server": str,
-        "admin": str
+        "admin": str,
+        "only_sync_admingroups": bool
     },
     "ldap": {
         "server": str,

@@ -31,16 +31,22 @@ def main(config="/etc/seafile/ldapsync.yml", v=False, vv=False):
   groups = seafile.fetchGroups()
   ldap_accounts = ldap.fetchAccounts()
 
-  admin_email = config["seafile"]["admin"]
+  admin_email = config["seafile"]["admin"] 
+  only_sync_admingroups = config["seafile"]["only_sync_admingroups"]
 
   logger.info("Syncing Groups...")
 
   for group in groups:
     logger.debug("Processing group " + group["name"])
 
+    if (only_sync_admingroups and group["owner"] != admin_email):
+      logger.debug("Only Admingroupsync is enabled, skipping ...")
+      continue
+
+    # Fetching a list of all members of a group in seafile
     seafile_member_emails = seafile.fetchGroupMembers(group["id"])
     seafile_member_emails = list(map(lambda member: member["email"], seafile_member_emails))
-    
+
     group_members = []
     group_member_emails = []
     group_member_emails_new = []
@@ -62,7 +68,6 @@ def main(config="/etc/seafile/ldapsync.yml", v=False, vv=False):
         seafile.removeGroupMember(group["id"], member)
 
     seafile.addGroupMember(group["id"], group_member_emails_new)
-
 
 if __name__ == '__main__':
     fire.Fire(main)

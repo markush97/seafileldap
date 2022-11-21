@@ -3,6 +3,7 @@ seafile:
   password:
   server: https://file.ffgf.at
   admin: test@test.at
+  only_sync_admingroups: true
 ldap:
   server:
   base: dc=ffgf,dc=at
